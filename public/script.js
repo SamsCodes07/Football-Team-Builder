@@ -1,6 +1,6 @@
 import { teams, players } from './data.js';
 
-// Team logo URLs (example, expand as needed)
+// 🛡️ Team logo URLs
 const teamLogos = {
     "Manchester City": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
     "Arsenal": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
@@ -24,7 +24,8 @@ const teamLogos = {
     "Sevilla": "https://upload.wikimedia.org/wikipedia/en/3/3c/Sevilla_FC_logo.svg"
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+    // 📌 DOM Elements
     const form = document.getElementById('player-form');
     const playerInput = document.getElementById('player-name');
     const teamInfo = document.getElementById('current-team-name');
@@ -35,102 +36,96 @@ document.addEventListener('DOMContentLoaded', function() {
     const lineupStatus = document.getElementById('lineup-status');
     const pitchPositions = document.querySelectorAll('.pitch-position');
 
-    // 11 positions for a standard lineup
-    const positions = [
-        'GK', 'LB', 'CB1', 'CB2', 'RB', 'LM', 'CM1', 'CM2', 'RM', 'ST1', 'ST2'
-    ];
+    // ⚽ Positions
+    const positions = ['GK', 'LB', 'CB1', 'CB2', 'RB', 'LM', 'CM1', 'CM2', 'RM', 'ST1', 'ST2'];
     let currentSlot = 0;
     let lineup = Array(positions.length).fill(null);
     let currentTeam = null;
 
-    function pickRandomTeam() {
-        return teams[Math.floor(Math.random() * teams.length)];
-    }
+    // 🔄 Pick random team
+    const pickRandomTeam = () => teams[Math.floor(Math.random() * teams.length)];
 
-    function updateTeamInfo() {
-        if (currentTeam) {
-            teamInfo.textContent = currentTeam.name;
-            teamLeague.textContent = currentTeam.league;
-            // Set logo
-            const logoUrl = teamLogos[currentTeam.name];
-            if (logoUrl) {
-                teamLogo.innerHTML = `<img src="${logoUrl}" alt="${currentTeam.name} logo">`;
-            } else {
-                teamLogo.innerHTML = '';
-            }
-            // Suggest valid players for current position
-            const suggestions = players.filter(p => p.team === currentTeam.name && p.position === positions[currentSlot]);
-            if (suggestions.length > 0) {
-                playerSuggestions.innerHTML = 'Suggestions: ' + suggestions.map(p => p.name).join(', ');
-            } else {
-                playerSuggestions.innerHTML = 'No suggestions available for this position.';
-            }
-        } else {
+    // 🎨 Render helpers
+    const renderTeamInfo = () => {
+        if (!currentTeam) {
             teamInfo.textContent = '';
             teamLogo.innerHTML = '';
             teamLeague.textContent = '';
             playerSuggestions.innerHTML = '';
+            return;
         }
-    }
 
-    function updateLineupStatus(msg = '') {
-        if (lineup.every(x => x)) {
-            lineupStatus.textContent = 'Lineup complete!';
-            // Show summary
-            lineupSummary.innerHTML = '<strong>Your Final Lineup:</strong><br>' +
-                lineup.map((p, idx) => `${positions[idx]}: ${p.name} (${p.team})`).join('<br>');
+        teamInfo.textContent = currentTeam.name;
+        teamLeague.textContent = currentTeam.league;
+
+        const logoUrl = teamLogos[currentTeam.name] || '';
+        teamLogo.innerHTML = logoUrl ? `<img src="${logoUrl}" alt="${currentTeam.name} logo">` : '';
+
+        const suggestions = players.filter(
+            p => p.team === currentTeam.name && p.position === positions[currentSlot]
+        );
+        playerSuggestions.textContent = suggestions.length
+            ? 'Suggestions: ' + suggestions.map(p => p.name).join(', ')
+            : 'No suggestions available for this position.';
+    };
+
+    const renderLineupStatus = (msg = '') => {
+        if (lineup.every(Boolean)) {
+            lineupStatus.textContent = '✅ Lineup complete!';
+            lineupSummary.innerHTML = `<strong>Your Final Lineup:</strong><br>` +
+                lineup.map((p, i) => `${positions[i]}: ${p.name} (${p.team})`).join('<br>');
         } else {
-            lineupStatus.textContent = msg || `Enter a player for position ${positions[currentSlot]} from ${currentTeam.name}`;
+            lineupStatus.textContent = msg || `Enter a player for ${positions[currentSlot]} (${currentTeam.name})`;
             lineupSummary.innerHTML = '';
         }
-    }
+    };
 
-    function renderPitch() {
+    const renderPitch = () => {
         pitchPositions.forEach((posDiv, idx) => {
             const player = lineup[idx];
-            if (player) {
-                posDiv.textContent = player.name;
-                posDiv.classList.add('assigned');
-            } else {
-                posDiv.textContent = positions[idx];
-                posDiv.classList.remove('assigned');
-            }
+            posDiv.textContent = player ? player.name : positions[idx];
+            posDiv.classList.toggle('assigned', Boolean(player));
         });
-    }
+    };
 
-    function nextSlot() {
+    // 🎯 Slot logic
+    const nextSlot = () => {
         currentSlot = lineup.findIndex(x => !x);
         if (currentSlot === -1) {
-            updateLineupStatus();
+            renderLineupStatus();
             return;
         }
         currentTeam = pickRandomTeam();
-        updateTeamInfo();
-        updateLineupStatus();
+        renderTeamInfo();
+        renderLineupStatus();
         playerInput.value = '';
         playerInput.focus();
-    }
+    };
 
-    form.addEventListener('submit', function(e) {
+    // 📝 Form handling
+    form.addEventListener('submit', e => {
         e.preventDefault();
         const playerName = playerInput.value.trim();
         if (!playerName) return;
-        // Validate player
+
         const validPlayer = players.find(p =>
             p.name.toLowerCase() === playerName.toLowerCase() &&
             p.team === currentTeam.name &&
             p.position === positions[currentSlot]
         );
+
         if (validPlayer) {
             lineup[currentSlot] = validPlayer;
             renderPitch();
             nextSlot();
         } else {
-            updateLineupStatus('Invalid player! Make sure the player is in the team and plays this position.');
+            lineupStatus.textContent = '❌ Invalid player! Try again.';
+            playerInput.classList.add('shake');
+            setTimeout(() => playerInput.classList.remove('shake'), 500); // simple animation
         }
     });
 
-    // Initial setup
+    // 🚀 Init
     renderPitch();
     nextSlot();
 });
