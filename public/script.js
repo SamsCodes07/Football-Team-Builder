@@ -1,131 +1,130 @@
-import { teams, players } from './data.js';
-
-// 🛡️ Team logo URLs
-const teamLogos = {
-    "Manchester City": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
-    "Arsenal": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
-    "Liverpool": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
-    "Real Madrid": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
-    "Barcelona": "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",
-    "Atletico Madrid": "https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg",
-    "Bayern Munich": "https://upload.wikimedia.org/wikipedia/en/1/1f/FC_Bayern_München_logo_%282017%29.svg",
-    "Borussia Dortmund": "https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg",
-    "RB Leipzig": "https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg",
-    "Juventus": "https://upload.wikimedia.org/wikipedia/commons/1/15/Juventus_FC_2017_logo.svg",
-    "Inter Milan": "https://upload.wikimedia.org/wikipedia/commons/0/0b/FC_Internazionale_Milano_2021.svg",
-    "AC Milan": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg",
-    "Napoli": "https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Napoli.svg",
-    "Paris Saint-Germain": "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
-    "Marseille": "https://upload.wikimedia.org/wikipedia/en/9/97/Olympique_Marseille_logo.svg",
-    "Monaco": "https://upload.wikimedia.org/wikipedia/en/2/2e/AS_Monaco_FC.svg",
-    "Tottenham Hotspur": "https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg",
-    "Chelsea": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
-    "Roma": "https://upload.wikimedia.org/wikipedia/en/f/f7/AS_Roma_logo.svg",
-    "Sevilla": "https://upload.wikimedia.org/wikipedia/en/3/3c/Sevilla_FC_logo.svg"
+// Example data: teams, logos, players
+const teams = {
+  "Monaco": {
+    logo: "images/monaco.png",
+    players: ["Paul Pogba", "Ben Yedder", "Golovin", "Caio Henrique"]
+  },
+  "PSG": {
+    logo: "images/psg.png",
+    players: ["Lionel Messi", "Kylian Mbappé", "Neymar Jr", "Achraf Hakimi"]
+  },
+  "Liverpool": {
+    logo: "images/liverpool.png",
+    players: ["Mohamed Salah", "Virgil van Dijk", "Alisson Becker", "Darwin Núñez"]
+  }
+  // Add more clubs as needed
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 📌 DOM Elements
-    const form = document.getElementById('player-form');
-    const playerInput = document.getElementById('player-name');
-    const teamInfo = document.getElementById('current-team-name');
-    const teamLogo = document.getElementById('current-team-logo');
-    const teamLeague = document.getElementById('current-team-league');
-    const playerSuggestions = document.getElementById('player-suggestions');
-    const lineupSummary = document.getElementById('lineup-summary');
-    const lineupStatus = document.getElementById('lineup-status');
-    const pitchPositions = document.querySelectorAll('.pitch-position');
+let currentClub = null;
+let selectedPositionElement = null;
 
-    // ⚽ Positions
-    const positions = ['GK', 'LB', 'CB1', 'CB2', 'RB', 'LM', 'CM1', 'CM2', 'RM', 'ST1', 'ST2'];
-    let currentSlot = 0;
-    let lineup = Array(positions.length).fill(null);
-    let currentTeam = null;
+// Initialize club dropdown
+function initClubs() {
+  const clubDropdown = document.getElementById("club-dropdown");
+  Object.keys(teams).forEach(clubName => {
+    const option = document.createElement("option");
+    option.value = clubName;
+    option.textContent = clubName;
+    clubDropdown.appendChild(option);
+  });
+  // set default club
+  currentClub = Object.keys(teams)[0];
+  clubDropdown.value = currentClub;
+  updateClubInfo();
+  clubDropdown.addEventListener("change", (e) => {
+    currentClub = e.target.value;
+    updateClubInfo();
+    clearAssignedPositions();
+  });
+}
 
-    // 🔄 Pick random team
-    const pickRandomTeam = () => teams[Math.floor(Math.random() * teams.length)];
+// Update club name + logo
+function updateClubInfo() {
+  const logoEl = document.getElementById("club-logo");
+  const nameEl = document.getElementById("club-name");
+  logoEl.src = teams[currentClub].logo;
+  nameEl.textContent = currentClub;
+}
 
-    // 🎨 Render helpers
-    const renderTeamInfo = () => {
-        if (!currentTeam) {
-            teamInfo.textContent = '';
-            teamLogo.innerHTML = '';
-            teamLeague.textContent = '';
-            playerSuggestions.innerHTML = '';
-            return;
-        }
+// Clear assigned positions when switching club
+function clearAssignedPositions() {
+  document.querySelectorAll(".position").forEach(pos => {
+    pos.classList.remove("assigned");
+    pos.innerHTML = "+";
+  });
+}
 
-        teamInfo.textContent = currentTeam.name;
-        teamLeague.textContent = currentTeam.league;
-
-        const logoUrl = teamLogos[currentTeam.name] || '';
-        teamLogo.innerHTML = logoUrl ? `<img src="${logoUrl}" alt="${currentTeam.name} logo">` : '';
-
-        const suggestions = players.filter(
-            p => p.team === currentTeam.name && p.position === positions[currentSlot]
-        );
-        playerSuggestions.textContent = suggestions.length
-            ? 'Suggestions: ' + suggestions.map(p => p.name).join(', ')
-            : 'No suggestions available for this position.';
-    };
-
-    const renderLineupStatus = (msg = '') => {
-        if (lineup.every(Boolean)) {
-            lineupStatus.textContent = '✅ Lineup complete!';
-            lineupSummary.innerHTML = `<strong>Your Final Lineup:</strong><br>` +
-                lineup.map((p, i) => `${positions[i]}: ${p.name} (${p.team})`).join('<br>');
-        } else {
-            lineupStatus.textContent = msg || `Enter a player for ${positions[currentSlot]} (${currentTeam.name})`;
-            lineupSummary.innerHTML = '';
-        }
-    };
-
-    const renderPitch = () => {
-        pitchPositions.forEach((posDiv, idx) => {
-            const player = lineup[idx];
-            posDiv.textContent = player ? player.name : positions[idx];
-            posDiv.classList.toggle('assigned', Boolean(player));
-        });
-    };
-
-    // 🎯 Slot logic
-    const nextSlot = () => {
-        currentSlot = lineup.findIndex(x => !x);
-        if (currentSlot === -1) {
-            renderLineupStatus();
-            return;
-        }
-        currentTeam = pickRandomTeam();
-        renderTeamInfo();
-        renderLineupStatus();
-        playerInput.value = '';
-        playerInput.focus();
-    };
-
-    // 📝 Form handling
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        const playerName = playerInput.value.trim();
-        if (!playerName) return;
-
-        const validPlayer = players.find(p =>
-            p.name.toLowerCase() === playerName.toLowerCase() &&
-            p.team === currentTeam.name &&
-            p.position === positions[currentSlot]
-        );
-
-        if (validPlayer) {
-            lineup[currentSlot] = validPlayer;
-            renderPitch();
-            nextSlot();
-        } else {
-            lineupStatus.textContent = '❌ Invalid player! Try again.';
-            playerInput.classList.add('shake');
-            setTimeout(() => playerInput.classList.remove('shake'), 500); // simple animation
-        }
+// Handle clicks on positions
+function initPositions() {
+  const positions = document.querySelectorAll(".position");
+  positions.forEach(pos => {
+    pos.addEventListener("click", () => {
+      selectedPositionElement = pos;
+      openPlayerModal();
     });
+  });
+}
 
-    // 🚀 Init
-    renderPitch();
-    nextSlot();
+// Open the player modal
+function openPlayerModal() {
+  const modal = document.getElementById("player-modal");
+  const searchInput = document.getElementById("player-search");
+  const dropdown = document.getElementById("player-dropdown");
+  searchInput.value = "";
+  dropdown.innerHTML = "";
+  modal.classList.remove("hidden");
+  searchInput.focus();
+}
+
+// Close modal
+function initModalClose() {
+  const closeBtn = document.querySelector(".close-btn");
+  closeBtn.addEventListener("click", () => {
+    document.getElementById("player-modal").classList.add("hidden");
+  });
+}
+
+// Search players in the current club
+function initPlayerSearch() {
+  const searchInput = document.getElementById("player-search");
+  const dropdown = document.getElementById("player-dropdown");
+
+  searchInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    dropdown.innerHTML = "";
+    if (!term) return;
+    const matches = teams[currentClub].players.filter(p => 
+      p.toLowerCase().includes(term)
+    );
+    matches.forEach(player => {
+      const li = document.createElement("li");
+      li.textContent = player;
+      li.addEventListener("click", () => {
+        assignPlayerToPosition(player);
+      });
+      dropdown.appendChild(li);
+    });
+  });
+}
+
+// Assign the clicked player to the selected position on the pitch
+function assignPlayerToPosition(playerName) {
+  if (!selectedPositionElement) return;
+
+  // mark assigned
+  selectedPositionElement.classList.add("assigned");
+  selectedPositionElement.innerHTML = `
+    <img src="${teams[currentClub].logo}" alt="${currentClub} Logo">
+    <span>${playerName}</span>
+  `;
+  // close modal
+  document.getElementById("player-modal").classList.add("hidden");
+}
+
+// Initialization
+document.addEventListener("DOMContentLoaded", () => {
+  initClubs();
+  initPositions();
+  initModalClose();
+  initPlayerSearch();
 });

@@ -1,228 +1,157 @@
-/* 🌍 Global Styles */
+/* --- Global --- */
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    margin: 0;
-    padding: 0;
-    color: #222;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #0f2027;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* 🔝 Header */
-.main-header {
-    background: #2a5298;
-    color: #fff;
-    text-align: center;
-    padding: 2rem 1rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-.main-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.3rem;
-}
-.main-header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
+.top-bar {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
 }
 
-/* 📌 Layout */
-.main-content {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 40px;
-    margin: 40px auto;
-    max-width: 1200px;
+#club-select label, #club-select select {
+  font-size: 1rem;
 }
 
-/* ⚽ Football Pitch */
-.pitch-section {
-    flex: 2;
-    display: flex;
-    justify-content: center;
+#club-dropdown {
+  margin-left: 10px;
+  padding: 5px;
+  border-radius: 4px;
 }
 
-#football-pitch {
-    width: 420px;
-    height: 600px;
-    background: #2e7d32;
-    border: 6px solid #fff;
-    border-radius: 16px;
-    position: relative;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    overflow: hidden;
+/* Club info */
+#club-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-/* 🎯 Pitch Lines */
-#football-pitch::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #fff;
-    transform: translateY(-50%);
+#club-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 
-.center-circle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 120px;
-    height: 120px;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+#club-name {
+  font-size: 1.5rem;
+  margin: 0;
 }
 
-.goal-box {
-    position: absolute;
-    width: 140px;
-    height: 80px;
-    border: 2px solid #fff;
-    left: 50%;
-    transform: translateX(-50%);
-}
-.goal-box.top { top: 0; }
-.goal-box.bottom { bottom: 0; }
-
-/* ➕ Position Placeholders */
-.pitch-position {
-    width: 65px;
-    height: 65px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    position: absolute;
-    transition: 0.2s ease;
-}
-.pitch-position:hover {
-    background: rgba(0,0,0,0.7);
-    transform: scale(1.1);
+/* Pitch & Positions */
+#pitch-container {
+  margin-top: 30px;
 }
 
-/* Example Formation (4-2-3-1) */
-.gk   { bottom: 20px; left: 50%; transform: translateX(-50%); }
-.cb1  { bottom: 120px; left: 30%; }
-.cb2  { bottom: 120px; right: 30%; }
-.lb   { bottom: 120px; left: 10%; }
-.rb   { bottom: 120px; right: 10%; }
-.cm1  { bottom: 220px; left: 35%; }
-.cm2  { bottom: 220px; right: 35%; }
-.cam1 { bottom: 320px; left: 25%; }
-.cam2 { bottom: 320px; right: 25%; }
-.cam3 { bottom: 320px; left: 50%; transform: translateX(-50%); }
-.st   { top: 40px; left: 50%; transform: translateX(-50%); }
-
-/* 📋 Sidebar */
-.sidebar {
-    flex: 1;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    padding: 2rem 1.5rem;
-    min-width: 320px;
-}
-.sidebar h2 {
-    margin-top: 0;
-    color: #2a5298;
+#pitch {
+  width: 600px;
+  height: 800px;
+  background: linear-gradient(180deg, #43a047 80%, #2e7d32 100%);
+  border: 6px solid #fff;
+  border-radius: 20px;
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  padding: 20px;
 }
 
-/* 📝 Forms */
-#player-form {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-input, select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-input:focus, select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0,123,255,0.3);
-    outline: none;
+.position {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
 }
 
-/* 🔘 Buttons */
-button, button[type="submit"] {
-    padding: 12px 20px;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: background 0.2s ease, transform 0.1s ease;
-}
-button:hover {
-    background: #0056b3;
-    transform: scale(1.03);
+.position.assigned {
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  flex-direction: column;
 }
 
-/* 📊 Team + Info Displays */
-.team-logo-display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-.team-logo-display img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
-    background: #fff;
-}
-.team-name-display {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #007bff;
-    margin: 1rem 0;
-    text-align: center;
-    letter-spacing: 1px;
-    background: #e3f2fd;
-    border-radius: 8px;
-    padding: 0.5rem 0;
-    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+.position.assigned img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-bottom: 5px;
 }
 
-/* 👥 Team List */
-#team-list {
-    margin-top: 30px;
-}
-.team-member {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    border-left: 4px solid #007bff;
-    transition: 0.2s ease;
-}
-.team-member:hover {
-    transform: translateX(5px);
-    background: #eef3f9;
+.position.assigned span {
+  font-size: 0.9rem;
+  text-align: center;
 }
 
-/* 🔻 Footer */
-.main-footer {
-    text-align: center;
-    padding: 1.5rem;
-    background: #2a5298;
-    color: #fff;
-    margin-top: 40px;
-    border-top: 2px solid #fff;
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #fff;
+  color: #000;
+  width: 320px;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+#player-search {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#player-dropdown {
+  margin-top: 10px;
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+#player-dropdown li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+#player-dropdown li:hover {
+  background: #eee;
 }
