@@ -1,54 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Football Team Builder</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Player Search Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <div class="top-bar">
-    <div id="club-select">
-      <label for="club-dropdown">Choose Club:</label>
-      <select id="club-dropdown"></select>
+    <div class="game-container">
+        <div class="team-card">
+            <img id="team-logo" src="" alt="Team Logo" class="team-logo">
+            <h2 id="team-name" class="team-name">MONACO</h2>
+        </div>
+        
+        <div class="field">
+            <!-- Formation positions -->
+            <div class="position goalkeeper" data-position="GK" style="top: 20%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            
+            <!-- Defenders -->
+            <div class="position defender" data-position="CB" style="top: 40%; left: 25%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position defender" data-position="CB" style="top: 40%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position defender" data-position="CB" style="top: 40%; left: 75%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            
+            <!-- Midfielders -->
+            <div class="position midfielder" data-position="CM" style="top: 60%; left: 20%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position midfielder" data-position="CM" style="top: 60%; left: 80%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position midfielder" data-position="CAM" style="top: 75%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            
+            <!-- Forwards -->
+            <div class="position forward" data-position="LW" style="top: 85%; left: 20%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position forward" data-position="ST" style="top: 85%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position forward" data-position="RW" style="top: 85%; left: 80%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-info">
+            <div class="game-stats">
+                <span>GAME: #946</span>
+                <div class="formation">4-2-3-1</div>
+            </div>
+            <div class="chemistry-score">
+                <span class="chem-label">CHEM</span>
+                <div class="score">0/33</div>
+            </div>
+        </div>
     </div>
-    <div id="club-info">
-      <img id="club-logo" src="" alt="Club Logo">
-      <h2 id="club-name"></h2>
+
+    <!-- Player Search Modal -->
+    <div id="player-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Player Search</h3>
+            <p id="search-instruction">Find player in the selected position from Monaco</p>
+            
+            <div class="search-container">
+                <input type="text" id="player-search" placeholder="Search player..." autocomplete="off">
+                <div id="suggestions" class="suggestions hidden"></div>
+            </div>
+            
+            <div class="hint">
+                <strong>HINT:</strong> Find a player who shares the same club, nation or league as other players in your lineup to improve chemistry. <span class="chemistry-info">What is chemistry?</span>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div id="pitch-container">
-    <div id="pitch">
-      <!-- Example 4-3-3 positions; adjust as needed -->
-      <div class="position" data-pos="LW">+</div>
-      <div class="position" data-pos="ST">+</div>
-      <div class="position" data-pos="RW">+</div>
-
-      <div class="position" data-pos="CM1">+</div>
-      <div class="position" data-pos="CM2">+</div>
-      <div class="position" data-pos="CM3">+</div>
-
-      <div class="position" data-pos="LB">+</div>
-      <div class="position" data-pos="CB1">+</div>
-      <div class="position" data-pos="CB2">+</div>
-      <div class="position" data-pos="RB">+</div>
-
-      <div class="position" data-pos="GK">+</div>
-    </div>
-  </div>
-
-  <!-- Modal for selecting player -->
-  <div id="player-modal" class="modal hidden">
-    <div class="modal-content">
-      <span class="close-btn">&times;</span>
-      <h3>Player Search</h3>
-      <input type="text" id="player-search" placeholder="Type player name...">
-      <ul id="player-dropdown"></ul>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
