@@ -38,13 +38,17 @@
         <aside class="sidebar">
             <div id="team-info">
                 <h2>Current Team</h2>
-                <div id="current-team-name"></div>
+                <div id="current-team-logo" class="team-logo-display"></div>
+                <div id="current-team-name" class="team-name-display"></div>
+                <div id="current-team-league" class="team-league-display"></div>
+                <div id="player-suggestions" class="player-suggestions"></div>
             </div>
             <form id="player-form">
                 <label for="player-name">Enter Player Name:</label>
                 <input type="text" id="player-name" autocomplete="off" required>
                 <button type="submit">Add Player</button>
             </form>
+            <div id="lineup-summary" class="lineup-summary"></div>
             <div id="lineup-status"></div>
         </aside>
     </main>
