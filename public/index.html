@@ -3,58 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Team Builder</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Football Player Search Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="main-header">
-        <h1>SuperDraft Soccer Team Builder</h1>
-        <p>Build your lineup by selecting valid players for randomly assigned teams!</p>
-    </header>
-    <main class="main-content">
-        <section class="pitch-section">
-            <div id="football-pitch">
-                <div class="pitch-row" id="row-gk">
-                    <div class="pitch-position" data-pos="GK"></div>
-                </div>
-                <div class="pitch-row" id="row-def">
-                    <div class="pitch-position" data-pos="LB"></div>
-                    <div class="pitch-position" data-pos="CB1"></div>
-                    <div class="pitch-position" data-pos="CB2"></div>
-                    <div class="pitch-position" data-pos="RB"></div>
-                </div>
-                <div class="pitch-row" id="row-mid">
-                    <div class="pitch-position" data-pos="LM"></div>
-                    <div class="pitch-position" data-pos="CM1"></div>
-                    <div class="pitch-position" data-pos="CM2"></div>
-                    <div class="pitch-position" data-pos="RM"></div>
-                </div>
-                <div class="pitch-row" id="row-fwd">
-                    <div class="pitch-position" data-pos="ST1"></div>
-                    <div class="pitch-position" data-pos="ST2"></div>
+    <div class="game-container">
+        <div class="team-card">
+            <img id="team-logo" src="" alt="Team Logo" class="team-logo">
+            <h2 id="team-name" class="team-name">MONACO</h2>
+        </div>
+        
+        <div class="field">
+            <!-- Formation positions -->
+            <div class="position goalkeeper" data-position="GK" style="top: 20%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
                 </div>
             </div>
-        </section>
-        <aside class="sidebar">
-            <div id="team-info">
-                <h2>Current Team</h2>
-                <div id="current-team-logo" class="team-logo-display"></div>
-                <div id="current-team-name" class="team-name-display"></div>
-                <div id="current-team-league" class="team-league-display"></div>
-                <div id="player-suggestions" class="player-suggestions"></div>
+            
+            <!-- Defenders -->
+            <div class="position defender" data-position="CB" style="top: 40%; left: 25%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
             </div>
-            <form id="player-form">
-                <label for="player-name">Enter Player Name:</label>
-                <input type="text" id="player-name" autocomplete="off" required>
-                <button type="submit">Add Player</button>
-            </form>
-            <div id="lineup-summary" class="lineup-summary"></div>
-            <div id="lineup-status"></div>
-        </aside>
-    </main>
-    <footer class="main-footer">
-        <p>Powered by Football-Team-Builder</p>
-    </footer>
+            <div class="position defender" data-position="CB" style="top: 40%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position defender" data-position="CB" style="top: 40%; left: 75%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            
+            <!-- Midfielders -->
+            <div class="position midfielder" data-position="CM" style="top: 60%; left: 20%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position midfielder" data-position="CM" style="top: 60%; left: 80%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position midfielder" data-position="CAM" style="top: 75%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            
+            <!-- Forwards -->
+            <div class="position forward" data-position="LW" style="top: 85%; left: 20%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position forward" data-position="ST" style="top: 85%; left: 50%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+            <div class="position forward" data-position="RW" style="top: 85%; left: 80%;">
+                <button class="position-btn">+</button>
+                <div class="player-info hidden">
+                    <span class="player-name"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-info">
+            <div class="game-stats">
+                <span>GAME: #946</span>
+                <div class="formation">4-2-3-1</div>
+            </div>
+            <div class="chemistry-score">
+                <span class="chem-label">CHEM</span>
+                <div class="score">0/33</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Search Modal -->
+    <div id="player-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Player Search</h3>
+            <p id="search-instruction">Find player in the selected position from Monaco</p>
+            
+            <div class="search-container">
+                <input type="text" id="player-search" placeholder="Search player..." autocomplete="off">
+                <div id="suggestions" class="suggestions hidden"></div>
+            </div>
+            
+            <div class="hint">
+                <strong>HINT:</strong> Find a player who shares the same club, nation or league as other players in your lineup to improve chemistry. <span class="chemistry-info">What is chemistry?</span>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
