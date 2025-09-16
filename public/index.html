@@ -7,48 +7,50 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <h1>Football Team Builder</h1>
-    </div>
-    <div id="team-builder">
-        <form id="player-form">
-            <label for="player-name">Player Name:</label>
-            <input type="text" id="player-name" required>
-            <label for="player-position">Position:</label>
-            <select id="player-position" required>
-                <option value="">Select Position</option>
-                <option value="Goalkeeper">Goalkeeper</option>
-                <option value="Defender">Defender</option>
-                <option value="Midfielder">Midfielder</option>
-                <option value="Forward">Forward</option>
-            </select>
-            <button type="submit">Add Player</button>
-        </form>
-        <div id="field-container">
-            <div id="football-field">
-                <div class="field-row goalkeeper-row">
-                    <div class="field-position" data-position="Goalkeeper">Goalkeeper</div>
+    <header class="main-header">
+        <h1>SuperDraft Soccer Team Builder</h1>
+        <p>Build your lineup by selecting valid players for randomly assigned teams!</p>
+    </header>
+    <main class="main-content">
+        <section class="pitch-section">
+            <div id="football-pitch">
+                <div class="pitch-row" id="row-gk">
+                    <div class="pitch-position" data-pos="GK"></div>
                 </div>
-                <div class="field-row defender-row">
-                    <div class="field-position" data-position="Defender">Defender 1</div>
-                    <div class="field-position" data-position="Defender">Defender 2</div>
-                    <div class="field-position" data-position="Defender">Defender 3</div>
-                    <div class="field-position" data-position="Defender">Defender 4</div>
+                <div class="pitch-row" id="row-def">
+                    <div class="pitch-position" data-pos="LB"></div>
+                    <div class="pitch-position" data-pos="CB1"></div>
+                    <div class="pitch-position" data-pos="CB2"></div>
+                    <div class="pitch-position" data-pos="RB"></div>
                 </div>
-                <div class="field-row midfielder-row">
-                    <div class="field-position" data-position="Midfielder">Midfielder 1</div>
-                    <div class="field-position" data-position="Midfielder">Midfielder 2</div>
-                    <div class="field-position" data-position="Midfielder">Midfielder 3</div>
-                    <div class="field-position" data-position="Midfielder">Midfielder 4</div>
+                <div class="pitch-row" id="row-mid">
+                    <div class="pitch-position" data-pos="LM"></div>
+                    <div class="pitch-position" data-pos="CM1"></div>
+                    <div class="pitch-position" data-pos="CM2"></div>
+                    <div class="pitch-position" data-pos="RM"></div>
                 </div>
-                <div class="field-row forward-row">
-                    <div class="field-position" data-position="Forward">Forward 1</div>
-                    <div class="field-position" data-position="Forward">Forward 2</div>
+                <div class="pitch-row" id="row-fwd">
+                    <div class="pitch-position" data-pos="ST1"></div>
+                    <div class="pitch-position" data-pos="ST2"></div>
                 </div>
             </div>
-        </div>
-        <div id="team-list"></div>
-    </div>
+        </section>
+        <aside class="sidebar">
+            <div id="team-info">
+                <h2>Current Team</h2>
+                <div id="current-team-name"></div>
+            </div>
+            <form id="player-form">
+                <label for="player-name">Enter Player Name:</label>
+                <input type="text" id="player-name" autocomplete="off" required>
+                <button type="submit">Add Player</button>
+            </form>
+            <div id="lineup-status"></div>
+        </aside>
+    </main>
+    <footer class="main-footer">
+        <p>Powered by Football-Team-Builder</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
