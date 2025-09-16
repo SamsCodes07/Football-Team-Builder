@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soccer Player Database & Team Builder</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    header { background: #333; color: #fff; padding: 1rem; text-align: center; }
+    .container { padding: 1rem; }
+    .filters { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+    select, input { padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td { padding: 0.5rem; border: 1px solid #ddd; text-align: center; }
+    th { background: #333; color: #fff; }
+    .pagination { margin-top: 1rem; text-align: center; }
+    .pagination button { margin: 0 0.25rem; padding: 0.5rem 1rem; }
+    .team-builder-btn { margin: 1rem 0; padding: 0.75rem 1.5rem; background: green; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Soccer Player Database & Team Builder</h1>
+</header>
+<div class="container">
+  <div class="filters">
+    <input type="text" id="searchName" placeholder="Search by name">
+    <select id="leagueFilter"><option value="">All Leagues</option></select>
+    <select id="positionFilter"><option value="">All Positions</option></select>
+    <select id="nationalityFilter"><option value="">All Nationalities</option></select>
+  </div>
+  <button class="team-builder-btn" onclick="openTeamBuilder()">Open Team Builder</button>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th><th>Age</th><th>League</th><th>Club</th><th>Nationality</th><th>Position</th><th>OVR</th><th>PAC</th><th>SHO</th><th>DEF</th>
+      </tr>
+    </thead>
+    <tbody id="playerTable"></tbody>
+  </table>
+  <div class="pagination" id="pagination"></div>
+</div>
+<script>
+const leagues = ["Premier League","La Liga","Serie A","Bundesliga","Ligue 1"];
+const clubs = ["Manchester United","Real Madrid","Juventus","Bayern","PSG","Chelsea","Barcelona"];
+const nationalities = ["England","Spain","Italy","Germany","France","Brazil","Argentina"];
+const positions = ["GK","DEF","MID","FWD"];
+
+function generatePlayers(n=200){
+  let arr=[];
+  for(let i=1;i<=n;i++){
+    arr.push({
+      id:i,
+      name:"Player "+i,
+      age:Math.floor(Math.random()*15)+18,
+      league:leagues[Math.floor(Math.random()*leagues.length)],
+      club:clubs[Math.floor(Math.random()*clubs.length)],
+      nationality:nationalities[Math.floor(Math.random()*nationalities.length)],
+      position:positions[Math.floor(Math.random()*positions.length)],
+      ovr:Math.floor(Math.random()*40)+60,
+      pac:Math.floor(Math.random()*40)+60,
+      sho:Math.floor(Math.random()*40)+60,
+      def:Math.floor(Math.random()*40)+60
+    });
+  }
+  return arr;
+}
+
+let players = generatePlayers();
+let currentPage=1;
+const perPage=10;
+
+function renderFilters(){
+  leagues.forEach(l=>document.getElementById("leagueFilter").innerHTML+=`<option value="${l}">${l}</option>`);
+  positions.forEach(p=>document.getElementById("positionFilter").innerHTML+=`<option value="${p}">${p}</option>`);
+  nationalities.forEach(n=>document.getElementById("nationalityFilter").innerHTML+=`<option value="${n}">${n}</option>`);
+}
+
+function getFiltered(){
+  let name=document.getElementById("searchName").value.toLowerCase();
+  let league=document.getElementById("leagueFilter").value;
+  let pos=document.getElementById("positionFilter").value;
+  let nat=document.getElementById("nationalityFilter").value;
+  return players.filter(p=>(!name||p.name.toLowerCase().includes(name))&&(!league||p.league===league)&&(!pos||p.position===pos)&&(!nat||p.nationality===nat));
+}
+
+function renderTable(){
+  let data=getFiltered();
+  let start=(currentPage-1)*perPage;
+  let pageData=data.slice(start,start+perPage);
+  document.getElementById("playerTable").innerHTML=pageData.map(p=>`
+    <tr>
+      <td>${p.name}</td><td>${p.age}</td><td>${p.league}</td><td>${p.club}</td><td>${p.nationality}</td><td>${p.position}</td><td>${p.ovr}</td><td>${p.pac}</td><td>${p.sho}</td><td>${p.def}</td>
+    </tr>`).join("");
+  renderPagination(data.length);
+}
+
+function renderPagination(total){
+  let pages=Math.ceil(total/perPage);
+  let html="";
+  for(let i=1;i<=pages;i++){
+    html+=`<button onclick="gotoPage(${i})" ${i===currentPage?'style="font-weight:bold;"':''}>${i}</button>`;
+  }
+  document.getElementById("pagination").innerHTML=html;
+}
+
+function gotoPage(p){currentPage=p;renderTable();}
+
+document.querySelectorAll("#searchName,#leagueFilter,#positionFilter,#nationalityFilter").forEach(e=>e.addEventListener("input",()=>{currentPage=1;renderTable();}));
+
+renderFilters();renderTable();
+
+// ===== TEAM BUILDER =====
+let selectedTeam=[];
+
+function openTeamBuilder(){
+  let win=window.open("","Team Builder","width=900,height=700");
+  win.document.write(getTeamBuilderHTML());
+  win.document.close();
+  win.teamPlayers = players;
+  win.selectedTeam = [];
+  win.updateField = updateField;
+  win.calculateChemistry = calculateChemistry;
+}
+
+function getTeamBuilderHTML(){
+  return `<!DOCTYPE html><html><head><title>Team Builder</title>
+  <style>
+    body{font-family:Arial;background:#0a3d62;color:#fff;text-align:center;}
+    h2{margin:0.5rem;}
+    .field{width:100%;height:500px;background:#145a32;position:relative;border:5px solid #fff;}
+    .slot{width:80px;height:80px;border:2px dashed #fff;border-radius:50%;position:absolute;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .score{margin-top:1rem;font-size:1.2rem;}
+    .list{max-height:150px;overflow:auto;background:#fff;color:#000;margin:1rem;padding:0.5rem;}
+    .list div{padding:0.25rem;cursor:pointer;}
+    .list div:hover{background:#ddd;}
+  </style>
+  </head><body>
+  <h2>Team Builder</h2>
+  <div class="field" id="field"></div>
+  <div class="score" id="score">Chemistry: 0</div>
+  <h3>Select Player</h3>
+  <div class="list" id="playerList"></div>
+  <script>
+    const slots=[{x:200,y:20},{x:400,y:20},{x:600,y:20},
+                {x:150,y:150},{x:350,y:150},{x:550,y:150},{x:750,y:150},
+                {x:250,y:300},{x:450,y:300},{x:650,y:300},{x:400,y:450}];
+
+    let field=document.getElementById('field');
+    slots.forEach((s,i)=>{
+      let d=document.createElement('div');
+      d.className='slot';
+      d.style.left=s.x+'px';
+      d.style.top=s.y+'px';
+      d.dataset.index=i;
+      d.innerText='+';
+      d.onclick=()=>showPlayers(i);
+      field.appendChild(d);
+    });
+
+    function showPlayers(slot){
+      let list=document.getElementById('playerList');
+      list.innerHTML=window.teamPlayers.map(p=>`<div onclick=\"selectPlayer(${slot},${p.id})\">${p.name} (${p.club}/${p.nationality})</div>`).join('');
+    }
+
+    function selectPlayer(slot,id){
+      let player=window.teamPlayers.find(p=>p.id===id);
+      window.selectedTeam[slot]=player;
+      let el=document.querySelector('[data-index="'+slot+'"]');
+      el.innerText=player.name.split(' ')[1];
+      calculateChemistry();
+    }
+
+    function calculateChemistry(){
+      let team=window.selectedTeam.filter(Boolean);
+      let score=0;
+      for(let i=0;i<team.length;i++){
+        for(let j=i+1;j<team.length;j++){
+          if(team[i].club===team[j].club)score+=3;
+          if(team[i].league===team[j].league)score+=2;
+          if(team[i].nationality===team[j].nationality)score+=1;
+        }
+      }
+      document.getElementById('score').innerText='Chemistry: '+score;
+    }
+  <\/script></body></html>`;
+}
+</script>
+</body>
+</html>

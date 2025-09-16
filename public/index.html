@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Team Builder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Football Team Builder</h1>
+    </div>
+    <div id="team-builder">
+        <form id="player-form">
+            <label for="player-name">Player Name:</label>
+            <input type="text" id="player-name" required>
+            <label for="player-position">Position:</label>
+            <select id="player-position" required>
+                <option value="">Select Position</option>
+                <option value="Goalkeeper">Goalkeeper</option>
+                <option value="Defender">Defender</option>
+                <option value="Midfielder">Midfielder</option>
+                <option value="Forward">Forward</option>
+            </select>
+            <button type="submit">Add Player</button>
+        </form>
+        <div id="team-list"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
